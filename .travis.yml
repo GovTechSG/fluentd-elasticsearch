@@ -18,7 +18,7 @@ jobs:
         - VERSION_FLUENT=$(printf "${VERSIONS}" | grep "fluent:" | cut -d ":" -f 2);
         - VERSION_PLUGIN=$(printf "${VERSIONs}" | grep "fluentd-plugin-elasticsearch:" | cut -d ":" -f 2);
         - BUILD_TAG="${DH_REPO}:fluent-${VERSION_FLUENT}_fluentd-plugin-elasticsearch-${VERSION_PLUGIN}"
-        - _="$(docker pull "${BUILD_TAG}")" && EXISTS=$?;
+        - _="$(docker pull "${BUILD_TAG}")" && EXISTS=$? || 1;
         - |
           if [[ "$EXIST" = "0" ]]; then
             printf "[${BUILD_TAG}] found, skipping push\n";
