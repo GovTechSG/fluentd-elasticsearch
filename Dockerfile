@@ -11,7 +11,7 @@ RUN apk add --update --no-cache --virtual $APK_ADD && \
       sudo gem sources --clear-all && \
       apk del ${APK_DEL} && rm -rf /var/cache/apk/* \
         /home/fluent/.gem/ruby/2.3.0/cache/*.gem
-COPY ./scripts/version-info ./version-info
+COPY ./scripts/version-info /usr/bin
 
 RUN deluser --remove-home postmaster
 RUN deluser --remove-home cyrus
