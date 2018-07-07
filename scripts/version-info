@@ -1,3 +1,4 @@
+#!/bin/sh
 FLUENTD_VERSION=$(fluentd --version | cut -d ' ' -f 2)
 GEM_VERSION=$(gem list | grep fluent-plugin-elasticsearch | cut -d " " -f 2 | tr -d '()')
 
