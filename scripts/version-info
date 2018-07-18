@@ -1,6 +1,9 @@
 #!/bin/sh
+
 FLUENTD_VERSION=$(fluentd --version | cut -d ' ' -f 2)
-GEM_VERSION=$(gem list | grep fluent-plugin-elasticsearch | cut -d " " -f 2 | tr -d '()')
+GEM=$(gem list | grep -E "fluent-plugin-.*elasticsearch")
+GEM_NAME=$($GEM | cut -d " " -f 2)
+GEM_VERSION=$($GEM | cut -d " " -f 2 | tr -d '()')
 
 printf -- "fluentd:${FLUENTD_VERSION}\n";
-printf -- "fluentd-plugin-elasticsearch:${GEM_VERSION}";
+printf -- "${GEM_NAME}:${GEM_VERSION}\n";

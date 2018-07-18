@@ -5,9 +5,10 @@ ENV PATH /home/fluent/.gem/ruby/2.4.0/bin:$PATH
 ENV APK_ADD=".build-deps sudo build-base ruby-dev"
 ENV APK_DEL=".build-deps sudo build-base ruby-dev"
 
-ARG PLUGIN_VER=2.4.0
+ARG GEM_VERSION="-v 2.4.0"
+ARG GEM_NAME="fluent-plugin-elasticsearch"
 RUN apk add --update --no-cache --virtual $APK_ADD && \
-      sudo gem install fluent-plugin-elasticsearch -v "${PLUGIN_VER}" && \
+      sudo gem install "${GEM_NAME}" ${GEM_VERSION} && \
       sudo gem sources --clear-all && \
       apk del ${APK_DEL} && rm -rf /var/cache/apk/* \
         /home/fluent/.gem/ruby/2.3.0/cache/*.gem

@@ -8,30 +8,37 @@ before_script:
   - docker login -u "${DH_USERNAME}" -p "${DH_PASSWORD}"
 after_script:
   - docker logout
+.build_script: &build_script
+  script:
+    - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
+    - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION} -t "${NEXT_TAG}" .;
+    - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
+    - echo "Installed Versions: ${VERSIONS}"
+    - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
+    - GEM_NAME=$(printf "${VERSIONS}" | grep -E "fluentd-plugin-.*elasticsearch:" | cut -d ":" -f 1);
+    - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluentd-plugin-.*elasticsearch:" | cut -d ":" -f 2);
+    - BUILD_TAG="${DH_REPO}:fluentd-${VERSION_FLUENTD}_${GEM_NAME}-${GEM_VERSION}"
+    - echo "New Docker Tag: ${BUILD_TAG}"
+    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$?;
+    - |
+      if [[ "$EXIST" = "0" ]]; then
+        printf "[${BUILD_TAG}] found, skipping push\n";
+        echo exists;
+      else
+        printf "[${BUILD_TAG}] not found, pushing to docker hub\n";
+        docker tag ${NEXT_TAG} ${BUILD_TAG};
+        docker push ${BUILD_TAG};
+        docker tag ${BUILD_TAG} ${DH_REPO}:${GEM_NAME}-latest;
+        docker push ${DH_REPO}:${GEM_NAME}-latest;
+      fi
 jobs:
   include:
     - stage: build_and_push
-      script:
-        - NEXT_TAG="${DH_REPO}:next";
-        - docker build --build-arg PLUGIN_VER=2.4.0 -t "${NEXT_TAG}" .;
-        - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
-        - echo $VERSIONS
-        - VERSION_FLUENT=$(printf "${VERSIONS}" | grep "fluent:" | cut -d ":" -f 2);
-        - VERSION_PLUGIN=$(printf "${VERSIONS}" | grep "fluentd-plugin-elasticsearch:" | cut -d ":" -f 2);
-        - BUILD_TAG="${DH_REPO}:fluent-${VERSION_FLUENT}_fluentd-plugin-elasticsearch-${VERSION_PLUGIN}"
-        - echo $BUILD_TAG
-        - EXISTS="$(docker pull "${BUILD_TAG}")" || 1;
-        - |
-          if [[ "$EXIST" = "0" ]]; then
-            printf "[${BUILD_TAG}] found, skipping push\n";
-            echo exists;
-          else
-            printf "[${BUILD_TAG}] not found, pushing to docker hub\n";
-            docker tag ${NEXT_TAG} ${BUILD_TAG};
-            docker push ${BUILD_TAG};
-            docker tag ${BUILD_TAG} ${DH_REPO}:latest;
-            docker push ${DH_REPO}:latest;
-          fi
-
-
+      env:
+        - GEM_NAME="fluent-plugin-aws-elasticsearch-service"
+      <<: *build_script
+    - stage: build_and_push
+      env:
+        - GEM_NAME="fluent-plugin-elasticsearch"
+      <<: *build_script
 
