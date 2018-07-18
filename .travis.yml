@@ -13,13 +13,13 @@ after_script:
     - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
     - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
-    - echo "Installed Versions: ${VERSIONS}"
+    - echo "Installed Versions=${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - GEM_NAME=$(printf "${VERSIONS}" | grep -E "fluentd-plugin-.*elasticsearch:" | cut -d ":" -f 1);
+    - GEM_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluentd-plugin-.*elasticsearch:" | cut -d ":" -f 1);
     - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluentd-plugin-.*elasticsearch:" | cut -d ":" -f 2);
-    - BUILD_TAG="${DH_REPO}:fluentd-${VERSION_FLUENTD}_${GEM_NAME}-${GEM_VERSION}"
-    - echo "New Docker Tag: ${BUILD_TAG}"
-    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$?;
+    - BUILD_TAG="${DH_REPO}:fluentd-${VERSION_FLUENTD}_${GEM_INSTALLED}-${GEM_VERSION}"
+    - echo "New Docker Tag=${BUILD_TAG}"
+    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || 1;
     - |
       if [[ "$EXIST" = "0" ]]; then
         printf "[${BUILD_TAG}] found, skipping push\n";
@@ -28,8 +28,8 @@ after_script:
         printf "[${BUILD_TAG}] not found, pushing to docker hub\n";
         docker tag ${NEXT_TAG} ${BUILD_TAG};
         docker push ${BUILD_TAG};
-        docker tag ${BUILD_TAG} ${DH_REPO}:${GEM_NAME}-latest;
-        docker push ${DH_REPO}:${GEM_NAME}-latest;
+        docker tag ${BUILD_TAG} ${DH_REPO}:${GEM_INSTALLED}-latest;
+        docker push ${DH_REPO}:${GEM_INSTALLED}-latest;
       fi
 jobs:
   include:
