@@ -34,4 +34,6 @@ RUN deluser --remove-home smmsp
 RUN deluser --remove-home guest
 
 COPY ./scripts/version-info /usr/bin
-EXPOSE 24284
+EXPOSE 24224
+
+ENTRYPOINT exec fluentd -c /fluentd/etc/fluent.conf -p /fluentd/plugins
