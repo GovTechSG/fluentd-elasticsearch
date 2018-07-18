@@ -20,7 +20,7 @@ after_script:
     - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_INSTALLED}"
     - BUILD_TAG="${DH_REPO}:${PREFIX}-${GEM_VERSION}"
     - echo "New Docker Tag=${BUILD_TAG}"
-    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || 1;
+    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || :;
     - |
       if [[ "$EXIST" = "0" ]]; then
         printf "[${BUILD_TAG}] found, skipping push\n";
