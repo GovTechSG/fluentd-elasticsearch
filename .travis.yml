@@ -15,8 +15,8 @@ after_script:
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions=${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - GEM_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch:" | cut -d ":" -f 1);
-    - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch:" | cut -d ":" -f 2);
+    - GEM_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch" | cut -d ":" -f 1);
+    - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch" | cut -d ":" -f 2);
     - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_INSTALLED}"
     - BUILD_TAG="${DH_REPO}:${PREFIX}-${GEM_VERSION}"
     - echo "New Docker Tag=${BUILD_TAG}"
