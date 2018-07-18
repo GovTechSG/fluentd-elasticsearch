@@ -11,7 +11,7 @@ after_script:
 .build_script: &build_script
   script:
     - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
-    - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION} -t "${NEXT_TAG}" .;
+    - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions: ${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
