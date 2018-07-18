@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/GovTechSG/fluentd-elasticsearch.svg?branch=master)](https://travis-ci.org/GovTechSG/fluentd-elasticsearch)
 
-This repository is an automated build job for a docker image containing fluentd service with a elasticsearch plugin installed and ready to use as an *output_plugin****.
+This repository is an automated build job for a docker image containing fluentd service with a elasticsearch plugin installed and ready to use as an *output_plugin*.
 
 
 ## Plugins Available
@@ -19,6 +19,7 @@ Basically [fluentd-plugin-elasticsearch](#fluent-plugin-elasticsearch)
 ### `fluent-plugin-elasticsearch`
 
 Canonical Tag: `fluentd-<FLUENTD-VERSION>_fluent-plugin-elasticsearch-<PLUGIN_VERSION>`
+
 Latest URL: `fluentd-<FLUENTD-VERSION>_fluent-plugin-elasticsearch-latest`
 
 #### Notes
@@ -28,6 +29,7 @@ Use this if elasticsearch is a self-hosted instance
 ### `fluent-plugin-aws-elasticsearch-service`
 
 Canonical Tag: `fluentd-<FLUENTD-VERSION>_fluent-plugin-aws-elasticsearch-service-<PLUGIN_VERSION>`
+
 Latest URL: `fluentd-<FLUENTD-VERSION>_fluent-plugin-aws-elasticsearch-service-latest`
 
 #### Notes
