@@ -11,14 +11,13 @@ after_script:
 .build_script: &build_script
   script:
     - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
-    - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
+    - docker build --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG} --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions=${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - GEM_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch" | cut -d ":" -f 1);
-    - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-.*elasticsearch" | cut -d ":" -f 2);
-    - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_INSTALLED}"
-    - BUILD_TAG="${DH_REPO}:${PREFIX}-${GEM_VERSION}"
+    - GEM_VERSION=$(printf ${VERSION} | grep fluent-plugin | sed 's/ /-/g');
+    - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_VERSION}"
+    - BUILD_TAG="${DH_REPO}:${PREFIX}"
     - echo "New Docker Tag=${BUILD_TAG}"
     - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || :;
     - |
@@ -36,10 +35,30 @@ jobs:
   include:
     - stage: build_and_push
       env:
-        - GEM_NAME="fluent-plugin-aws-elasticsearch-service"
+        - GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
     - stage: build_and_push
       env:
         - GEM_NAME="fluent-plugin-elasticsearch"
       <<: *build_script
+    - stage: build_and_push
+      env:
+        - GEM_NAME="fluent-plugin-aws-elasticsearch"
+      <<: *build_script
+    - stage: build_and_push
+      env:
+        - BASE_IMAGE_TAG=v0.12-debian-2
+        - GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service"
+      <<: *build_script
+    - stage: build_and_push
+      env:
+        - BASE_IMAGE_TAG=v0.12-debian-2
+        - GEM_NAME="fluent-plugin-elasticsearch"
+      <<: *build_script
+    - stage: build_and_push
+      env:
+        - BASE_IMAGE_TAG=v0.12-debian-2
+        - GEM_NAME="fluent-plugin-aws-elasticsearch"
+      <<: *build_script
+
 
