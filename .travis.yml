@@ -11,6 +11,7 @@ after_script:
 .build_script: &build_script
   script:
     - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
+    - NEXT_TAG="${DH_REPO}:`echo ${GEM_NAME} | sed 's/ /_/g'`-next"
     - docker build --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG} --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions=${VERSIONS}"
