@@ -14,6 +14,10 @@ RUN apt-get update && \
       gem sources --clear-all && \
       apt-get remove -y ${APT_DEL}
 
+# Add fluent user as the fluent image doesnt have for some reason
+RUN groupadd -r fluent && useradd -r -g fluent fluent || \
+       chown -R fluent /fluentd && chgrp -R fluent /fluentd
+
 USER fluent
 COPY ./scripts/version-info /usr/bin
 EXPOSE 24224
