@@ -51,17 +51,17 @@ jobs:
       <<: *build_script
     - stage: build_and_push
       env:
-        - BASE_IMAGE_TAG=v0.14-debian-2
+        - BASE_IMAGE_TAG=v0.14-debian
         - GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
     - stage: build_and_push
       env:
-        - BASE_IMAGE_TAG=v0.14-debian-2
+        - BASE_IMAGE_TAG=v0.14-debian
         - GEM_NAME="fluent-plugin-elasticsearch"
       <<: *build_script
     - stage: build_and_push
       env:
-        - BASE_IMAGE_TAG=v0.14-debian-2
+        - BASE_IMAGE_TAG=v0.14-debian
         - GEM_NAME="fluent-plugin-aws-elasticsearch"
       <<: *build_script
 
