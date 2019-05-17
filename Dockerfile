@@ -12,10 +12,10 @@ RUN apt-get update && \
       apt-get install -y ${APT_INS} && \
       gem install ${GEM_NAME} && \
       gem sources --clear-all && \
+      apt-get remove -y ${APT_DEL} && \
+      apt-get autoremove -y && \
       rm /var/lib/gems/*/cache/* && \
-      rm -rf /var/lib/apt/lists/* && \
-      apt-get remove -y ${APT_DEL} \
-      apt-get autoremove -y
+      rm -rf /var/lib/apt/lists/*
 
 # Add fluent user as the fluent image doesnt have for some reason
 RUN groupadd -r fluent && useradd -r -g fluent fluent || \
