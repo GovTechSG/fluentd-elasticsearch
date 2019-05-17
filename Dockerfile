@@ -12,11 +12,14 @@ RUN apt-get update && \
       apt-get install -y ${APT_INS} && \
       gem install ${GEM_NAME} && \
       gem sources --clear-all && \
-      apt-get remove -y ${APT_DEL}
+      rm /var/lib/gems/*/cache/* && \
+      rm /var/lib/apt/lists/* && \
+      apt-get remove -y ${APT_DEL} \
+      apt-get autoremove -y
 
 # Add fluent user as the fluent image doesnt have for some reason
 RUN groupadd -r fluent && useradd -r -g fluent fluent || \
-       chown -R fluent /fluentd && chgrp -R fluent /fluentd
+      chown -R fluent /fluentd && chgrp -R fluent /fluentd
 
 USER fluent
 COPY ./scripts/version-info /usr/bin
