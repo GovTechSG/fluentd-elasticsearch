@@ -16,7 +16,7 @@ after_script:
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions=${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - GEM_VERSION=$(printf ${VERSION} | grep fluent-plugin | sed ':a;N;$!ba;s/\n/_/g');
+    - GEM_VERSION=$(printf "${VERSION}"" | grep fluent-plugin | sed ':a;N;$!ba;s/\n/_/g');
     - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_VERSION}"
     - BUILD_TAG="${DH_REPO}:${PREFIX}"
     - echo "New Docker Tag=${BUILD_TAG}"
@@ -47,7 +47,7 @@ jobs:
     - stage: build_and_push
       env:
         - BASE_IMAGE_TAG=stable-debian
-        - GEM_NAME="fluent-plugin-aws-elasticsearch"
+        - GEM_NAME="fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
     - stage: build_and_push
       env:
@@ -62,7 +62,7 @@ jobs:
     - stage: build_and_push
       env:
         - BASE_IMAGE_TAG=v0.14-debian
-        - GEM_NAME="fluent-plugin-aws-elasticsearch"
+        - GEM_NAME="fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
     - stage: build_and_push
       env:
@@ -77,6 +77,6 @@ jobs:
     - stage: build_and_push
       env:
         - BASE_IMAGE_TAG=v1.2.6-debian
-        - GEM_NAME="fluent-plugin-aws-elasticsearch"
+        - GEM_NAME="fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
 
