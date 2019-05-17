@@ -13,7 +13,7 @@ RUN apt-get update && \
       gem install ${GEM_NAME} && \
       gem sources --clear-all && \
       rm /var/lib/gems/*/cache/* && \
-      rm /var/lib/apt/lists/* && \
+      rm -rf /var/lib/apt/lists/* && \
       apt-get remove -y ${APT_DEL} \
       apt-get autoremove -y
 
