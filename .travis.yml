@@ -23,7 +23,7 @@ after_script:
     - echo "New Docker Tag=${BUILD_TAG}"
     - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || :;
     - |
-      if [[ "$EXIST" = "1" ]]; then
+      if [[ "$EXIST" = "0" ]]; then
         printf "[${BUILD_TAG}] found, skipping push\n";
         echo exists;
       else
