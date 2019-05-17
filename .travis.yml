@@ -11,6 +11,7 @@ after_script:
 .build_script: &build_script
   script:
     - NEXT_TAG="${DH_REPO}:`echo ${GEM_NAME} | sed 's/ /_/g'`-next"
+    - LATEST_TAG="${DH_REPO}:fluentd-${VERSION_FLUENTD}_`echo ${GEM_NAME} | sed 's/ /_/g'`-latest"
     - echo "${NEXT_TAG}"
     - docker build --no-cache --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG} --build-arg GEM_NAME="${GEM_NAME}" -t ${NEXT_TAG} .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
@@ -29,8 +30,8 @@ after_script:
         printf "[${BUILD_TAG}] not found, pushing to docker hub\n";
         docker tag ${NEXT_TAG} ${BUILD_TAG};
         docker push ${BUILD_TAG};
-        docker tag ${BUILD_TAG} ${DH_REPO}:${PREFIX}-latest;
-        docker push ${DH_REPO}:${PREFIX}-latest;
+        docker tag ${BUILD_TAG} ${LATEST_TAG};
+        docker push ${LATEST_TAG};
       fi
 jobs:
   include:
