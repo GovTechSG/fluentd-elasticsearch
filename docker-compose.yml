@@ -7,7 +7,6 @@ services:
       - "elasticsearch"
     volumes:
       - ./fluent.conf:/fluentd/etc/fluent.conf
-      - ./fluent.conf:/etc/fluent/fluent.conf
     ports:
       - 24224:24224 # for fluentd
       - 24231:24231 # for /metrics

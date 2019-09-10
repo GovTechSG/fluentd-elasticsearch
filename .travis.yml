@@ -10,41 +10,9 @@ after_script:
   - docker logout
 .build_script: &build_script
   script:
-    - NEXT_TAG="${DH_REPO}:`echo ${GEM_NAME} | sed 's/ /_/g'`-next"
-    - docker build --no-cache --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG} --build-arg GEM_NAME="${GEM_NAME}" -t ${NEXT_TAG} .;
-    - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
-    - echo "Installed Versions=${VERSIONS}"
-    - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - LATEST_TAG="${DH_REPO}:fluentd-${VERSION_FLUENTD}_`echo ${GEM_NAME} | sed 's/ /_/g'`-latest"
-    - echo "LATEST_TAG=${LATEST_TAG}"
-    - GEM_VERSION=$(printf "${VERSIONS}" | grep fluent-plugin | sed ':a;N;$!ba;s/\n/_/g');
-    - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_VERSION}"
-    - BUILD_TAG="${DH_REPO}:${PREFIX}"
-    - echo "New Docker Tag=${BUILD_TAG}"
-    - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || :;
-    - |
-      if [[ "$EXIST" = "0" ]]; then
-        printf "[${BUILD_TAG}] found, skipping push\n";
-        echo exists;
-      else
-        printf "[${BUILD_TAG}] not found, pushing to docker hub\n";
-        docker tag ${NEXT_TAG} ${BUILD_TAG};
-        docker push ${BUILD_TAG};
-        docker tag ${BUILD_TAG} ${LATEST_TAG};
-        docker push ${LATEST_TAG};
-      fi
+    - make publish
 jobs:
   include:
     # default build with everything
     - stage: build_and_push
-      <<: *build_script
-    # build with only elastic search
-    - stage: build_and_push
-      env:
-        - GEM_NAME="fluent-plugin-prometheus fluent-plugin-elasticsearch"
-      <<: *build_script
-    # build with only aws elastic search
-    - stage: build_and_push
-      env:
-        - GEM_NAME="fluent-plugin-prometheus fluent-plugin-aws-elasticsearch-service"
       <<: *build_script
