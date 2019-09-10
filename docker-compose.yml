@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.5'
 services:
   fluentd:
     build: .
@@ -7,15 +7,17 @@ services:
       - "elasticsearch"
     volumes:
       - ./fluent.conf:/fluentd/etc/fluent.conf
+      - ./fluent.conf:/etc/fluent/fluent.conf
     ports:
-      - "24224:24224"
+      - 24224:24224 # for fluentd
+      - 24231:24231 # for /metrics
   elasticsearch:
     image: elasticsearch
     ports:
-      - "9200:9200"
+      - 9200:9200
   kibana:
     image: kibana
     links:
-      - "elasticsearch"
+      - elasticsearch
     ports:
-      - "5601:5601"
+      - 5601:5601

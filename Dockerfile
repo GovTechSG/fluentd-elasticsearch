@@ -1,28 +1,24 @@
-ARG BASE_IMAGE_TAG=stable-debian
+ARG BASE_IMAGE_TAG=edge
 FROM fluent/fluentd:${BASE_IMAGE_TAG}
-LABEL Ryanoolala <ryan_goh@tech.gov.sg>
-WORKDIR /home/fluent
-# ENV PATH /home/fluent/.gem/ruby/2.4.0/bin:$PATH
-ENV APT_INS="build-essential make libcurl4-gnutls-dev"
-ENV APT_DEL="build-essential make libcurl4-gnutls-dev"
-ARG GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service"
-
+ENV DEPS="build-base make" \
+  DEPS_RM="build-base make " \
+  GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service fluent-plugin-prometheus"
+# this is required for `apk` commands to run successfully
 USER root
-RUN apt-get update && \
-      apt-get install -y ${APT_INS} && \
-      gem install ${GEM_NAME} && \
-      gem sources --clear-all && \
-      apt-get remove -y ${APT_DEL} && \
-      apt-get autoremove -y && \
-      rm /var/lib/gems/*/cache/* && \
-      rm -rf /var/lib/apt/lists/*
-
-# Add fluent user as the fluent image doesnt have for some reason
-RUN groupadd -r fluent && useradd -r -g fluent fluent || \
-      chown -R fluent /fluentd && chgrp -R fluent /fluentd
-
+RUN apk update --no-cache \
+  && apk upgrade --no-cache
+RUN apk add --no-cache ${DEPS} \
+  && gem install ${GEM_NAME} \
+  && gem sources --clear-all \
+  && apk del --no-cache ${DEPS}
+# switching back to fluent here before anyone nags
 USER fluent
+# we use the output of this script for populating the tags
 COPY ./scripts/version-info /usr/bin
-EXPOSE 24224
-
-ENTRYPOINT exec fluentd -c /fluentd/etc/fluent.conf -p /fluentd/plugins
+# other non-impact documentation stuff
+WORKDIR /
+EXPOSE 24224 24231
+VOLUME [ "/fluentd/etc", "/fluentd/log", "/fluentd/plugins" ]
+ENTRYPOINT [ "fluentd", "-c", "/fluentd/etc/fluent.conf" ]
+LABEL maintainer "Ryanoolala <ryan_goh@tech.gov.sg>" \
+  aside "zephinzer <joseph_goh@tech.gov.sg>"

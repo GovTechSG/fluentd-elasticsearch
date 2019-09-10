@@ -7,8 +7,11 @@ This repository is an automated build job for a docker image containing fluentd 
 
 ## Plugins Available
 
-- fluent-plugin-elasticsearch [uken/fluent-plugin-elasticsearch](https://github.com/uken/fluent-plugin-elasticsearch)
-- fluent-plugin-aws-elasticsearch-service [atomita/fluent-plugin-aws-elasticsearch-service](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service)
+The following plugins are available for this image:
+
+- ElasticSearch [`uken/fluent-plugin-elasticsearch`](https://github.com/uken/fluent-plugin-elasticsearch)
+- ElasticSearch (AWS) [`atomita/fluent-plugin-aws-elasticsearch-service`](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service)
+- [`fluent/fluent-plugin-prometheus`](https://github.com/fluent/fluent-plugin-prometheus)
 
 ## Descriptions
 
@@ -38,15 +41,25 @@ Use this if using aws elasticsearch
 
 ## Usage
 
-#### Running
+### Running
+
 > docker run -v ${PWD}/fluent.conf:/fluentd/etc/fluent.conf -p 24224:24224 -it govtechsg/fluentd-elasticsearch:latest
 
-
-#### Available commands in container
+### Available commands in container
 
 Outputs fluentd and plugin versions
 
 > version-info
+
+## Runbook
+
+### Building the image
+
+To build the image:
+
+```sh
+make build
+```
 
 ## License
 
