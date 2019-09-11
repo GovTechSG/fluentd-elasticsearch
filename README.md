@@ -11,33 +11,25 @@ The following plugins are available for this image:
 
 - ElasticSearch [`uken/fluent-plugin-elasticsearch`](https://github.com/uken/fluent-plugin-elasticsearch)
 - ElasticSearch (AWS) [`atomita/fluent-plugin-aws-elasticsearch-service`](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service)
-- [`fluent/fluent-plugin-prometheus`](https://github.com/fluent/fluent-plugin-prometheus)
+- Prometheus [`fluent/fluent-plugin-prometheus`](https://github.com/fluent/fluent-plugin-prometheus)
 
-## Descriptions
+## Tag Descriptions
 
 ### `latest`
 
 Basically [fluentd-plugin-elasticsearch](#fluent-plugin-elasticsearch)
 
-### `fluent-plugin-elasticsearch`
+### `x.y.z`
 
-Canonical Tag: `fluentd-<FLUENTD-VERSION>_fluent-plugin-elasticsearch-<PLUGIN_VERSION>`
+The semver version of the FluentD installed
 
-Latest URL: `fluentd-<FLUENTD-VERSION>_fluent-plugin-elasticsearch-latest`
+### `$DATETIME`
 
-#### Notes
+Daily build of the image
 
-Use this if elasticsearch is a self-hosted instance
+### `x.y.z-service-X.Y.Z_service-Y.Z.X`
 
-### `fluent-plugin-aws-elasticsearch-service`
-
-Canonical Tag: `fluentd-<FLUENTD-VERSION>_fluent-plugin-aws-elasticsearch-service-<PLUGIN_VERSION>`
-
-Latest URL: `fluentd-<FLUENTD-VERSION>_fluent-plugin-aws-elasticsearch-service-latest`
-
-#### Notes
-
-Use this if using aws elasticsearch
+Full tag with all versions of relevant installed software.
 
 ## Usage
 
@@ -59,6 +51,12 @@ To build the image:
 
 ```sh
 make build
+```
+
+### Publishing the image
+
+```sh
+make publish;
 ```
 
 ## License
