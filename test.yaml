@@ -1,0 +1,46 @@
+schemaVersion: '2.0.0'
+commandTests:
+  - name: "fluentd exists"
+    command: "which"
+    args: ["fluentd"]
+    expectedOutput: ["/usr/bin/fluentd"]
+  - name: "fluentd can be run successfully (we kind of need this?)"
+    command: "fluentd"
+    args: ["--version"]
+    expectedOutput: ["fluentd 1."]
+  - name: "fluentd consumes the correct configuration file"
+    command: "timeout"
+    args: ["2s", "fluentd"]
+    expectedOutput: ['parsing config file is succeeded path="/fluentd/etc/fluent.conf"']
+  - name: "gem should not be available to prevent installation of additional gems"
+    command: "which"
+    args: ["gem"]
+    exitCode: 1
+  - name: "apk should not be available to prevent additional software to be installed"
+    command: "which"
+    args: ["apk"]
+    exitCode: 1
+fileExistenceTests:
+  - name: 'fluentd configuration'
+    path: '/fluentd/etc/fluent.conf'
+    shouldExist: true
+    permissions: '-r--r-----'
+metadataTest:
+  entrypoint:
+    - fluentd
+  env:
+    - key: FLUENT_CONF
+      value: /fluentd/etc/fluent.conf
+  exposedPorts:
+    - 24224
+    - 24231
+  labels:
+    - key: maintainer
+      value: .+
+      isRegex: true
+    - key: description
+      value: .+
+      isRegex: true
+  volumes:
+    - /fluentd/etc
+  workdir: '/'

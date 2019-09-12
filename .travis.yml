@@ -8,11 +8,10 @@ before_script:
   - docker login -u "${DH_USERNAME}" -p "${DH_PASSWORD}"
 after_script:
   - docker logout
-.build_script: &build_script
-  script:
-    - make publish
 jobs:
   include:
     # default build with everything
     - stage: build_and_push
-      <<: *build_script
+      script:
+        - make test.docker
+        - make publish
