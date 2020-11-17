@@ -1,6 +1,6 @@
 #!/bin/sh
 FLUENTD_VERSION=$(fluentd --version | cut -d ' ' -f 2)
-GEM_VERSION=$(ls -1 /usr/lib/ruby/gems/2.5.0/gems | grep -E "fluent-plugin-.*" | tr -s '\n' ' ' | sed 's/ $//g' | sed 's/ /_/g')
+GEM_VERSION=$(ls -1 /usr/lib/ruby/gems/*/gems | grep -E "fluent-plugin-.*" | tr -s '\n' ' ' | sed 's/ $//g' | sed 's/ /_/g')
 
 printf -- "fluentd:${FLUENTD_VERSION}\n";
 printf -- "${GEM_VERSION}";
