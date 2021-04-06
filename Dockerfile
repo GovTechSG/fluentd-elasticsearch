@@ -1,7 +1,7 @@
 FROM alpine:latest
 ENV DEPS="build-base make" \
   DEPS_RM="build-base make " \
-  GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service fluent-plugin-prometheus"
+  GEM_NAME="fluent-plugin-elasticsearch fluent-plugin-aws-elasticsearch-service"
 # this is required for `apk` commands to run successfully
 RUN apk update --no-cache \
   && apk upgrade --no-cache
