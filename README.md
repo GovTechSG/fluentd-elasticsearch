@@ -12,7 +12,6 @@ The following plugins are available for this image:
 
 - ElasticSearch [`uken/fluent-plugin-elasticsearch`](https://github.com/uken/fluent-plugin-elasticsearch)
 - ElasticSearch (AWS) [`atomita/fluent-plugin-aws-elasticsearch-service`](https://github.com/atomita/fluent-plugin-aws-elasticsearch-service)
-- Prometheus [`fluent/fluent-plugin-prometheus`](https://github.com/fluent/fluent-plugin-prometheus)
 
 - - -
 
